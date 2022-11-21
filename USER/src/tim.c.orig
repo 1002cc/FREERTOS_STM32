@@ -1,0 +1,314 @@
+#include "tim.h"
+
+static TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure; //定时器结构体
+static GPIO_InitTypeDef GPIO_InitStructure;				//定义引脚结果体
+static TIM_OCInitTypeDef  TIM_OCInitStructure;			//PWM设置结构体
+static NVIC_InitTypeDef NVIC_InitStructure;
+//定时器10初始化
+//void TIM10_Init(void)
+//{
+//	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM9, ENABLE);
+//	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM10, ENABLE);
+//	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM11, ENABLE);
+//	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM12, ENABLE);
+//	
+////	TIM10->PSC = (8400)-1; 
+////	TIM10->ARR=(10000-1); //0.1s
+////	TIM10->CNT=0;
+////	
+////	TIM10->DIER|=0X01;
+//	
+//	TIM_TimeBaseStructure.TIM_Period = (20000) - 1; //0,2S
+//    TIM_TimeBaseStructure.TIM_Prescaler = 8400 - 1; //预分频
+//    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;//向上计数
+//    TIM_TimeBaseInit(TIM9, &TIM_TimeBaseStructure);
+//	
+//	TIM_TimeBaseStructure.TIM_Period = (50000) - 1; //0.5s
+//    TIM_TimeBaseStructure.TIM_Prescaler = 8400 - 1; //预分频
+//    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;//向上计数
+//    TIM_TimeBaseInit(TIM10, &TIM_TimeBaseStructure);
+//	
+//	TIM_TimeBaseStructure.TIM_Period = (80000) - 1; //0.8s
+//    TIM_TimeBaseStructure.TIM_Prescaler = 8400 - 1; //预分频
+//    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;//向上计数
+//    TIM_TimeBaseInit(TIM11, &TIM_TimeBaseStructure);
+//	
+//	TIM_TimeBaseStructure.TIM_Period = (120000) - 1; //1,2s
+//    TIM_TimeBaseStructure.TIM_Prescaler = 8400 - 1; //预分频
+//    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;//向上计数
+//    TIM_TimeBaseInit(TIM12, &TIM_TimeBaseStructure);
+//			
+//	TIM_ITConfig(TIM9, TIM_IT_Update, ENABLE);
+//    TIM_ITConfig(TIM10, TIM_IT_Update, ENABLE);
+//	TIM_ITConfig(TIM11, TIM_IT_Update, ENABLE);
+//	TIM_ITConfig(TIM12, TIM_IT_Update, ENABLE);
+//	
+//	NVIC_InitStructure.NVIC_IRQChannel = TIM1_UP_TIM10_IRQn;
+//    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+//    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
+//    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+//    NVIC_Init(&NVIC_InitStructure);
+//	
+//	NVIC_InitStructure.NVIC_IRQChannel = TIM8_UP_TIM13_IRQn;
+//    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+//    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
+//    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+//    NVIC_Init(&NVIC_InitStructure);
+//	
+//	NVIC_InitStructure.NVIC_IRQChannel = TIM8_UP_TIM13_IRQn;
+//    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+//    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
+//    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+//    NVIC_Init(&NVIC_InitStructure);
+//	
+//	//TIM_Cmd(TIM10, ENABLE);
+//	//TIM10->CR1|=0X01;
+//	TIM_Cmd(TIM9, ENABLE);
+//	TIM_Cmd(TIM10, ENABLE);
+//	TIM_Cmd(TIM11, ENABLE);
+//	TIM_Cmd(TIM12, ENABLE);
+//	
+//	
+//	
+//}
+
+//void TIM1_UP_TIM10_IRQHandler(void)
+//{
+//	if(TIM_GetITStatus(TIM10, TIM_IT_Update)==1)
+//    {
+//		LED(9);
+//        TIM_ClearITPendingBit(TIM10, TIM_IT_Update);
+//    }
+//	
+//	
+//}
+
+//void TIM1_BRK_TIM9_IRQHandler(void)
+//{
+//	if(TIM_GetITStatus(TIM9, TIM_IT_Update)==1)
+//    {
+//		LED(10);
+//        TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
+//    }
+//}
+
+//void TIM8_BRK_TIM12_IRQHandler(void)
+//{
+//	if(TIM_GetITStatus(TIM11, TIM_IT_Update)==1)
+//    {
+//		LED(13);
+//        TIM_ClearITPendingBit(TIM11, TIM_IT_Update);
+//    }
+//	if(TIM_GetITStatus(TIM12, TIM_IT_Update)==1)
+//    {
+//		LED(14);
+//        TIM_ClearITPendingBit(TIM12, TIM_IT_Update);
+//    }
+
+//}
+void tim2_3_4_5_init(void)
+{	
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);
+	
+    TIM_TimeBaseStructure.TIM_Period = (20000) - 1; //0,2S
+    TIM_TimeBaseStructure.TIM_Prescaler = 8400 - 1; //预分频
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;//向上计数
+    TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+	
+	TIM_TimeBaseStructure.TIM_Period = (50000) - 1; //0.5s
+    TIM_TimeBaseStructure.TIM_Prescaler = 8400 - 1; //预分频
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;//向上计数
+    TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
+	
+	TIM_TimeBaseStructure.TIM_Period = (80000) - 1; //0.8s
+    TIM_TimeBaseStructure.TIM_Prescaler = 8400 - 1; //预分频
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;//向上计数
+    TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
+	
+	TIM_TimeBaseStructure.TIM_Period = (120000) - 1; //1,2s
+    TIM_TimeBaseStructure.TIM_Prescaler = 8400 - 1; //预分频
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;//向上计数
+    TIM_TimeBaseInit(TIM5, &TIM_TimeBaseStructure);
+	
+	
+	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
+    TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
+	TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
+	TIM_ITConfig(TIM5, TIM_IT_Update, ENABLE);
+
+    NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+
+	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 4;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 4;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+
+	NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 5;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 5;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+	
+	NVIC_InitStructure.NVIC_IRQChannel = TIM5_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 6;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 6;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+	
+    TIM_Cmd(TIM2, ENABLE);
+	TIM_Cmd(TIM3, ENABLE);
+	TIM_Cmd(TIM4, ENABLE);
+	TIM_Cmd(TIM5, ENABLE);
+}
+
+void TIM2_IRQHandler(void)
+{
+    if(TIM_GetITStatus(TIM2, TIM_IT_Update) == 0)
+    {
+		LED(9);
+        TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+    }
+}
+
+
+void TIM3_IRQHandler(void)
+{
+    
+		LED(10);
+        TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+    
+}
+
+void TIM4_IRQHandler(void)
+{
+    
+		LED(13);
+        TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
+  
+}
+
+
+void TIM5_IRQHandler(void)
+{
+   
+		LED(14);
+        TIM_ClearITPendingBit(TIM5, TIM_IT_Update);
+    
+}
+
+
+//TIM1
+void tim1_init(void)
+{
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+    NVIC_InitTypeDef NVIC_InitStructure;
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+
+    TIM_TimeBaseStructure.TIM_Period = 10000 - 1; //计数值
+    TIM_TimeBaseStructure.TIM_Prescaler = 16800 - 1; //预分频
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;//向上计数
+    //TIM_TimeBaseStructure.TIM_ClockDivision = 0; //F4不支持
+    //TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
+
+    TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
+
+    TIM_ITConfig(TIM1, TIM_IT_Update, ENABLE);
+
+    NVIC_InitStructure.NVIC_IRQChannel = TIM1_UP_TIM10_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+
+    TIM_Cmd(TIM1, ENABLE);
+}
+
+void TIM1_UP_TIM10_IRQHandler(void)
+{
+	if(TIM_GetITStatus(TIM1, TIM_IT_Update)==1)
+    {
+		//LED_ON_OFF(9,1);
+        TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+//============================================================================================
+//引脚复用模式PWM呼吸灯
+void TIM_GPIO_Config(void) //初始化引脚
+{
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOF, ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+	
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 ;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; //复用模式
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP ;
+    GPIO_Init(GPIOF, &GPIO_InitStructure);
+	
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14 ;
+	GPIO_Init(GPIOE, &GPIO_InitStructure);
+	
+    GPIO_PinAFConfig(GPIOF, GPIO_PinSource9, GPIO_AF_TIM14); //连接TIM14定时器
+	
+    GPIO_PinAFConfig(GPIOE, GPIO_PinSource13, GPIO_AF_TIM1);
+    GPIO_PinAFConfig(GPIOE, GPIO_PinSource14, GPIO_AF_TIM1);
+}
+
+
+void tim1_tim14_init(void)
+{
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM14, ENABLE);
+	    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+    TIM_GPIO_Config();
+
+    TIM_TimeBaseStructure.TIM_Period = (10000 / 100) - 1; //计数值
+    TIM_TimeBaseStructure.TIM_Prescaler = 8400 - 1; //预分频
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;//向上计数
+
+    TIM_TimeBaseInit(TIM14, &TIM_TimeBaseStructure);
+    TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
+
+    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+    TIM_OCInitStructure.TIM_Pulse = 100;
+    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+
+    //通道1
+    TIM_OC1Init(TIM14, &TIM_OCInitStructure);
+    TIM_OC1PreloadConfig(TIM14, TIM_OCPreload_Enable);
+	
+	TIM_OC3Init(TIM1, &TIM_OCInitStructure);
+    TIM_OC3PreloadConfig(TIM1, TIM_OCPreload_Enable);
+
+    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+    TIM_OCInitStructure.TIM_Pulse = 50;
+	
+    TIM_OC4Init(TIM1, &TIM_OCInitStructure);
+    TIM_OC4PreloadConfig(TIM1, TIM_OCPreload_Enable);
+	
+    TIM_ARRPreloadConfig(TIM14, ENABLE);
+	TIM_CtrlPWMOutputs(TIM1, ENABLE);
+    TIM_Cmd(TIM1, ENABLE);
+    TIM_Cmd(TIM14, ENABLE);
+}
+
