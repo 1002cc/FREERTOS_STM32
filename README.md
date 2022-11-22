@@ -28,6 +28,8 @@
 ## 4.功能
 ## 5.其他
 
+![智能家居项目](https://user-images.githubusercontent.com/49366044/203246078-994ba4c1-c8b3-4f41-a469-4aa3a4d3b2f2.svg)
+
 ## 特点
 - 兼容性强
 - 移植性强
